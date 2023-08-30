@@ -2,6 +2,7 @@ import Fastify, { FastifyInstance } from "fastify";
 import fastifyCors from "@fastify/cors";
 import { router } from "./routes";
 import { logger } from "./utils/logger";
+import { mongoClient } from "./services/mongo";
 
 export const server: FastifyInstance = Fastify({
   // pluginTimeout: 30000,
@@ -26,5 +27,6 @@ server.addHook("onReady", () => {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 server.addHook("onClose", async (instance) => {
-  logger.info("server: onClose");
+  await mongoClient.close();
+  logger.info("Server resources released");
 });
